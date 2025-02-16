@@ -19,14 +19,14 @@ struct Rental {
     bool aktif;
 };
 
-// Data motor yang tersedia
+
 Motor daftarMotor[3] = {
     {"Honda Vario", "AB 1234 XY", 50000, true},
     {"Yamaha NMAX", "AB 5678 XY", 70000, true},
     {"Suzuki Satria", "AB 9101 XY", 60000, true}
 };
 
-// Data penyewaan (maksimal 5 pelanggan)
+
 Rental daftarRental[5];
 int jumlahRental = 0;
 
