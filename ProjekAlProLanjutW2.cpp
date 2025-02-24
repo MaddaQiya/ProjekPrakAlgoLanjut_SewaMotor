@@ -19,26 +19,24 @@ struct Rental {
     bool aktif;
 };
 
-// Data motor yang tersedia
 Motor daftarMotor[3] = {
     {"Honda Vario", "AB 1234 XY", 50000, true},
     {"Yamaha NMAX", "AB 5678 XY", 70000, true},
     {"Suzuki Satria", "AB 9101 XY", 60000, true}
 };
 
-// Data penyewaan (maksimal 5 pelanggan)
 Rental daftarRental[5];
 int jumlahRental = 0;
 
-// Fungsi rekursif untuk menampilkan daftar motor
+
 void tampilkanMotorRekursif(int i) {
-    if (i >= 3) return;  // Basis
+    if (i >= 3) return; 
     cout << left << setw(5) << i + 1
          << setw(15) << daftarMotor[i].nama
          << setw(12) << daftarMotor[i].platNomor
          << "Rp " << setw(8) << daftarMotor[i].hargaPerHari
          << (daftarMotor[i].tersedia ? "Tersedia" : "Disewa") << "\n";
-    tampilkanMotorRekursif(i + 1);  // Rekursi
+    tampilkanMotorRekursif(i + 1); 
 }
 
 void tampilkanMotor() {
@@ -106,10 +104,10 @@ void tampilkanRental() {
     }
 }
 
-// Fungsi rekursif untuk menghitung total biaya sewa
+
 int hitungBiaya(int hargaPerHari, int lamaHari) {
-    if (lamaHari == 1) return hargaPerHari;  // Basis
-    return hargaPerHari + hitungBiaya(hargaPerHari, lamaHari - 1);  // Rekursi
+    if (lamaHari == 1) return hargaPerHari;  
+    return hargaPerHari + hitungBiaya(hargaPerHari, lamaHari - 1);  
 }
 
 void kembalikanMotor() {
