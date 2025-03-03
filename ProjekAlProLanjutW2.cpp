@@ -1,11 +1,10 @@
 #include <iostream>
-#include <iomanip>
 #include <string>
-
+#include <iomanip>
 using namespace std;
 
 struct Motor {
-    string nama;
+    string model;
     string platNomor;
     int hargaPerHari;
     bool tersedia;
@@ -13,144 +12,112 @@ struct Motor {
 
 struct Rental {
     string namaPenyewa;
-    string kontak;
-    int lamaHari;
-    int indexMotor;
-    bool aktif;
+    string platMotor;
+    int lamaSewa;
 };
 
-Motor daftarMotor[3] = {
-    {"Honda Vario", "AB 1234 XY", 50000, true},
-    {"Yamaha NMAX", "AB 5678 XY", 70000, true},
-    {"Suzuki Satria", "AB 9101 XY", 60000, true}
+const int JUMLAH_MOTOR = 20;
+Motor daftarMotor[JUMLAH_MOTOR] = {
+    {"Honda Vario", "AB1234CD", 50000, true},
+    {"Yamaha NMAX", "AB2345DE", 70000, true},
+    {"Honda Beat", "AB3456EF", 45000, true},
+    {"Suzuki Nex", "AB4567FG", 40000, true},
+    {"Yamaha Mio", "AB5678GH", 48000, true},
+    {"Honda PCX", "AB6789IJ", 75000, true},
+    {"Vespa Sprint", "AB7890JK", 90000, true},
+    {"Kawasaki Ninja", "AB8901KL", 120000, true},
+    {"Honda Supra", "AB9012LM", 50000, true},
+    {"Yamaha Aerox", "AB0123MN", 65000, true},
+    {"Honda Vario", "AB1122OP", 50000, true},
+    {"Yamaha NMAX", "AB2233QR", 70000, true},
+    {"Honda Beat", "AB3344ST", 45000, true},
+    {"Suzuki Nex", "AB4455UV", 40000, true},
+    {"Yamaha Mio", "AB5566WX", 48000, true},
+    {"Honda PCX", "AB6677YZ", 75000, true},
+    {"Vespa Sprint", "AB7788AA", 90000, true},
+    {"Kawasaki Ninja", "AB8899BB", 120000, true},
+    {"Honda Supra", "AB9900CC", 50000, true},
+    {"Yamaha Aerox", "AB0011DD", 65000, true}
 };
 
-Rental daftarRental[5];
-int jumlahRental = 0;
 
-
-void tampilkanMotorRekursif(int i) {
-    if (i >= 3) return; 
-    cout << left << setw(5) << i + 1
-         << setw(15) << daftarMotor[i].nama
-         << setw(12) << daftarMotor[i].platNomor
-         << "Rp " << setw(8) << daftarMotor[i].hargaPerHari
-         << (daftarMotor[i].tersedia ? "Tersedia" : "Disewa") << "\n";
-    tampilkanMotorRekursif(i + 1); 
+int transaksi[JUMLAH_MOTOR][2] = {0};
+void tampilkanMotor() {
+    cout << "\n=================================================================\n";
+    cout << "| No |    Model Motor    |  Plat Nomor  | Harga/Hari | Status   |\n";
+    cout << "=================================================================\n";
+    for (int i = 0; i < JUMLAH_MOTOR; i++) {
+        cout << "| " << setw(2) << i + 1 << " | " << setw(16) << daftarMotor[i].model << " | "
+             << setw(12) << daftarMotor[i].platNomor << " | Rp" << setw(8) << daftarMotor[i].hargaPerHari
+             << " | " << setw(8) << (daftarMotor[i].tersedia ? "Tersedia" : "Disewa") << " |\n";
+    }
+    cout << "================================================================= \n";
 }
 
-void tampilkanMotor() {
-    cout << "\n=== Daftar Motor ===\n";
-    cout << left << setw(5) << "No" << setw(15) << "Nama Motor" 
-         << setw(12) << "Plat Nomor" << setw(12) << "Harga/Hari" << "Status\n";
-    cout << "---------------------------------------------------------\n";
-    tampilkanMotorRekursif(0);
+int sequentialSearch(string plat) {
+    for (int i = 0; i < JUMLAH_MOTOR; i++) {
+        if (daftarMotor[i].platNomor == plat) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+int hitungBiaya(int hargaPerHari, int lama) {
+    if (lama == 0) {
+        return 0;
+    }
+    return hargaPerHari + hitungBiaya(hargaPerHari, lama - 1);
 }
 
 void sewaMotor() {
-    if (jumlahRental >= 5) {
-        cout << "Maaf, semua slot penyewaan sudah penuh.\n";
-        return;
-    }
-
-    tampilkanMotor();
-
-    int pilih;
-    cout << "\nPilih nomor motor yang ingin disewa: ";
-    cin >> pilih;
-
-    if (pilih < 1 || pilih > 3 || !daftarMotor[pilih - 1].tersedia) {
-        cout << "Pilihan tidak valid atau motor sedang disewa.\n";
-        return;
-    }
-
-    cout << "Masukkan nama penyewa: ";
-    cin.ignore();
-    getline(cin, daftarRental[jumlahRental].namaPenyewa);
-
-    cout << "Masukkan kontak penyewa: ";
-    getline(cin, daftarRental[jumlahRental].kontak);
-
+    string plat;
+    int lama;
+    cout << "\nMasukkan plat nomor motor yang ingin disewa: ";
+    cin >> plat;
     cout << "Masukkan lama sewa (hari): ";
-    cin >> daftarRental[jumlahRental].lamaHari;
-
-    daftarRental[jumlahRental].indexMotor = pilih - 1;
-    daftarRental[jumlahRental].aktif = true;
-    daftarMotor[pilih - 1].tersedia = false;
-    jumlahRental++;
-
-    cout << "Motor berhasil disewa oleh " << daftarRental[jumlahRental - 1].namaPenyewa << "!\n";
-}
-
-void tampilkanRental() {
-    cout << "\n=== Daftar Penyewaan Aktif ===\n";
-    if (jumlahRental == 0) {
-        cout << "Belum ada penyewaan aktif.\n";
-        return;
+    cin >> lama;
+    
+    int index = sequentialSearch(plat);
+    if (index != -1 && daftarMotor[index].tersedia) {
+        daftarMotor[index].tersedia = false;
+        transaksi[index][0] = lama;
+        transaksi[index][1] = hitungBiaya(daftarMotor[index].hargaPerHari, lama);
+        cout << "\nMotor dengan plat " << plat << " berhasil disewa selama " << lama << " hari!\n";
+    } else {
+        cout << "\nMotor tidak tersedia atau tidak ditemukan.\n";
     }
-
-    cout << left << setw(5) << "No" << setw(15) << "Nama Penyewa"
-         << setw(15) << "Motor" << setw(10) << "Lama (hari)" << "\n";
-    cout << "-------------------------------------------\n";
-
-    for (int i = 0; i < jumlahRental; i++) {
-        if (daftarRental[i].aktif) {
-            int idx = daftarRental[i].indexMotor;
-            cout << left << setw(5) << i + 1
-                 << setw(15) << daftarRental[i].namaPenyewa
-                 << setw(15) << daftarMotor[idx].nama
-                 << setw(10) << daftarRental[i].lamaHari << "\n";
-        }
-    }
-}
-
-
-int hitungBiaya(int hargaPerHari, int lamaHari) {
-    if (lamaHari == 1) return hargaPerHari;  
-    return hargaPerHari + hitungBiaya(hargaPerHari, lamaHari - 1);  
 }
 
 void kembalikanMotor() {
-    if (jumlahRental == 0) {
-        cout << "Tidak ada motor yang sedang disewa.\n";
-        return;
+    string plat;
+    cout << "\nMasukkan plat nomor motor yang dikembalikan: ";
+    cin >> plat;
+    
+    int index = sequentialSearch(plat);
+    if (index != -1 && !daftarMotor[index].tersedia) {
+        daftarMotor[index].tersedia = true;
+        cout << "\nMotor dengan plat " << plat << " berhasil dikembalikan.\n";
+        cout << "Total biaya sewa: Rp" << transaksi[index][1] << "\n";
+        transaksi[index][0] = 0;
+        transaksi[index][1] = 0;
+    } else {
+        cout << "\nMotor tidak ditemukan atau belum disewa.\n";
     }
-
-    tampilkanRental();
-
-    int pilih;
-    cout << "\nPilih nomor penyewaan yang akan dikembalikan: ";
-    cin >> pilih;
-
-    if (pilih < 1 || pilih > jumlahRental || !daftarRental[pilih - 1].aktif) {
-        cout << "Pilihan tidak valid.\n";
-        return;
-    }
-
-    int idxMotor = daftarRental[pilih - 1].indexMotor;
-    int lamaHari = daftarRental[pilih - 1].lamaHari;
-    int totalBiaya = hitungBiaya(daftarMotor[idxMotor].hargaPerHari, lamaHari);
-
-    daftarMotor[idxMotor].tersedia = true;
-    daftarRental[pilih - 1].aktif = false;
-
-    cout << "\nMotor telah dikembalikan oleh " << daftarRental[pilih - 1].namaPenyewa << ".\n";
-    cout << "Total biaya sewa: Rp " << totalBiaya << "\n";
 }
 
 int main() {
     int pilihan;
-
     do {
-        cout << "\n=== Sistem Rental Motor ===\n";
-        cout << "1. Tampilkan Daftar Motor\n";
-        cout << "2. Sewa Motor\n";
-        cout << "3. Tampilkan Daftar Penyewaan\n";
-        cout << "4. Kembalikan Motor\n";
-        cout << "5. Keluar\n";
-        cout << "Pilih menu: ";
+        cout << "\n========= SEWA MOTOR UHUY =========\n";
+        cout << "1. Lihat daftar motor\n";
+        cout << "2. Sewa motor\n";
+        cout << "3. Kembalikan motor\n";
+        cout << "4. Keluar\n";
+        cout << "===================================\n";
+        cout << "Pilihan: ";
         cin >> pilihan;
-
+        
         switch (pilihan) {
             case 1:
                 tampilkanMotor();
@@ -159,18 +126,15 @@ int main() {
                 sewaMotor();
                 break;
             case 3:
-                tampilkanRental();
-                break;
-            case 4:
                 kembalikanMotor();
                 break;
-            case 5:
-                cout << "Terima kasih telah menggunakan layanan kami!\n";
+            case 4:
+                cout << "\nTerima kasih telah menggunakan layanan kami!\n";
                 break;
             default:
-                cout << "Pilihan tidak valid, silakan coba lagi.\n";
+                cout << "\nPilihan tidak valid!\n";
         }
-    } while (pilihan != 5);
-
+    } while (pilihan != 4);
+    
     return 0;
 }
