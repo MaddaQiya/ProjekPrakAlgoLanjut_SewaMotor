@@ -189,7 +189,7 @@ void menuPrediksi() {
 /// /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////// Menu 2 //////////////////////////////////////////////////////////
-
+ 
 void tambahMotor() {
     if (jumlahMotor >= MAX_MOTOR) {
         cout << "Kapasitas maksimum tercapai.\n";
@@ -587,7 +587,7 @@ void menuManajemenData() {
     cin >> pilihan;
     switch(pilihan) {
         case 1: simpanKeFile(); break;
-        case 2: bacaDariFile(); tampilkanMotor(); break;
+        case 2: bacaDariFile(); break;
         case 3: tampilkanLogTransaksi(); break;
         case 4: hapusFile(); break;
         case 5: renameFile(); break;
