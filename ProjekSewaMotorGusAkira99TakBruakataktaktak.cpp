@@ -36,7 +36,7 @@ Motor daftarMotor[MAX_MOTOR] = {
     {"Yamaha R15 V4 155", "AB9900CC", 115000, true},
     {"Suzuki GSX R150", "AB0011DD", 108000, true}
 };
-int jumlahMotor = 20;
+int jumlahMotor = 0;
 
 int ketersediaan[5][7] = {
     {1, 1, 0, 1, 1, 1, 0}, 
@@ -46,6 +46,29 @@ int ketersediaan[5][7] = {
     {1, 0, 1, 0, 1, 0, 1}  
 };
 
+void isiDataDefault() {
+    daftarMotor[0] = {"Honda Vario 125", "AB1234CD", 50000, true};
+    daftarMotor[1] = {"Yamaha NMAX 155", "AB2345DE", 70000, true};
+    daftarMotor[2] = {"Honda Beat Street 110", "AB3456EF", 45000, true};
+    daftarMotor[3] = {"Suzuki Nex II 115", "AB4567FG", 40000, true};
+    daftarMotor[4] = {"Yamaha Mio S 125", "AB5678GH", 48000, true};
+    daftarMotor[5] = {"Honda PCX 160", "AB6789IJ", 75000, true};
+    daftarMotor[6] = {"Vespa Sprint 150", "AB7890JK", 90000, true};
+    daftarMotor[7] = {"Kawasaki Ninja RR 150", "AB8901KL", 120000, true};
+    daftarMotor[8] = {"Honda Supra X 125", "AB9012LM", 50000, true};
+    daftarMotor[9] = {"Yamaha Aerox Turbo 155", "AB0123MN", 65000, true};
+    daftarMotor[10] = {"Honda Scoopy Prestige 110", "AB1122OP", 53000, true};
+    daftarMotor[11] = {"Yamaha Lexi S 125", "AB2233QR", 60000, true};
+    daftarMotor[12] = {"Suzuki Satria FU 150", "AB3344ST", 62000, true};
+    daftarMotor[13] = {"Vespa LX 125", "AB4455UV", 87000, true};
+    daftarMotor[14] = {"Yamaha XSR 155", "AB5566WX", 95000, true};
+    daftarMotor[15] = {"Honda Revo Fit 110", "AB6677YZ", 41000, true};
+    daftarMotor[16] = {"Kawasaki W175 175", "AB7788AA", 100000, true};
+    daftarMotor[17] = {"Honda CBR 150R", "AB8899BB", 110000, true};
+    daftarMotor[18] = {"Yamaha R15 V4 155", "AB9900CC", 115000, true};
+    daftarMotor[19] = {"Suzuki GSX R150", "AB0011DD", 108000, true};
+    jumlahMotor = 20;
+}
 
 ////////////////////////////////////////////// Menu 3/////////////////////////////////////////////////////////
 int cariMotor(string plat) {
@@ -368,6 +391,46 @@ void quickSort(int low, int high, bool ascending) {
         quickSort(pi + 1, high, ascending);
     }
 }
+void merge(Motor arr[], int left, int mid, int right, bool ascending) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    Motor* L = new Motor[n1];
+    Motor* R = new Motor[n2];
+
+    for (int i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+    for (int j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
+
+    int i = 0, j = 0, k = left;
+
+    while (i < n1 && j < n2) {
+        if ((ascending && L[i].hargaPerHari <= R[j].hargaPerHari) ||
+            (!ascending && L[i].hargaPerHari >= R[j].hargaPerHari)) {
+            arr[k++] = L[i++];
+        } else {
+            arr[k++] = R[j++];
+        }
+    }
+
+    while (i < n1) arr[k++] = L[i++];
+    while (j < n2) arr[k++] = R[j++];
+
+    delete[] L;
+    delete[] R;
+}
+
+void mergeSort(Motor arr[], int left, int right, bool ascending) {
+    if (left < right) {
+        int mid = (left + right) / 2;
+        mergeSort(arr, left, mid, ascending);
+        mergeSort(arr, mid + 1, right, ascending);
+        merge(arr, left, mid, right, ascending);
+    }
+}
+
+
 
 void algoritmasorting(){
     int metode;
@@ -382,7 +445,9 @@ cout << "7. Shell Sort Ascending\n";
 cout << "8. Shell Sort Descending\n";
 cout << "9. Quick Sort Ascending\n";
 cout << "10. Quick Sort Descending\n";
-cout << "Pilih Metode (1-10) : "; 
+cout << "11. Merge Sort Ascending\n";
+cout << "12. Merge Sort Descending\n";
+cout << "Pilih Metode (1-12) : ";
     cin >> metode;
     switch(metode) {
     case 1: bubbleSort(true); break;
@@ -395,9 +460,10 @@ cout << "Pilih Metode (1-10) : ";
     case 8: shellSort(false); break;
     case 9: quickSort(0, jumlahMotor - 1, true); break;
     case 10: quickSort(0, jumlahMotor - 1, false); break;
+    case 11: mergeSort(daftarMotor, 0, jumlahMotor - 1, true); break;
+    case 12: mergeSort(daftarMotor, 0, jumlahMotor - 1, false); break;
     default: cout << "Pilihan tidak valid.\n"; return;
 }
-
     cout << "Data berhasil diurutkan dengan algoritma pilihan.\n";
     tampilkanMotor();
 }
@@ -760,6 +826,16 @@ bool kembaliKeMenu() {
 
 
 int main() {
+    ifstream cek("data_motor.txt");
+    if (cek.peek() == ifstream::traits_type::eof()) {
+    cout << "[INFO] File kosong, mengisi data default...\n";
+    isiDataDefault();
+    simpanKeFile();
+    }
+    cek.close();
+    bacaDariFile();
+    cout << "[INFO] Data motor berhasil dimuat dari file.\n";
+
     int pilihan;
     do {
     cout << "\n========= SEWA MOTOR GUS AKIRA 99 =========\n";
